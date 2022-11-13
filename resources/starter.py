@@ -10,9 +10,9 @@ class Db_Initializer:
                     ('first_name', 'varchar(25)'), ('last_name', 'varchar(25)'), ('email', 'varchar(25)'),
                     ('group_id', 'varchar(25)')],
             'Schedule': [('schedule_id', 'varchar(25)'), ('schedule_name', 'varchar(25)'), 
-                        ('start_time', 'varchar(25)'), ('end_time', 'varchar(25'), ('type', 'varchar(25'),
-                        ('user_id', 'varchar(25')],
-            'Group': [('group_id', 'varchar(25'), ('group_name', 'varchar(25')],
+                        ('start_time', 'DATETIME'), ('end_time', 'DATETIME'), ('type', 'varchar(25)'),
+                        ('user_id', 'varchar(25)')],
+            'Group': [('group_id', 'varchar(25)'), ('group_name', 'varchar(25)')],
         }
 
         self.pkeys = {
@@ -22,10 +22,12 @@ class Db_Initializer:
         }
 
         self.fkeys =  {
-            'User': ['group_id'],
-            'Schedule': ['user_id'],
+            'User': [('group_id', 'WeMeet.Group(group_id)')],
+            'Schedule': [('user_id', 'WeMeet.User(user_id)')],
             'Group': [],
         }
+
+        self.table_creation_order = ['Group', 'User', 'Schedule']
 
     def _get_connection(self):
         """
@@ -61,19 +63,21 @@ class Db_Initializer:
             return cursor.fetchall()
 
     def init_tables(self):
-        sql = "create table if not exists WeMeet.{0}"
+        sql = "create table if not exists WeMeet.{0} ("
         conn = self._get_connection()
-        for table in self.tables:
+        for table in self.table_creation_order:
             mysql = sql.format(table)
             field_details = self.fields[table]
             for field_detail in field_details:
-                if field_detail[0] in self.pkeys[table]:
-                    mysql = mysql + f" primary key"
-                elif field_detail[0] in self.fkeys[table]:
-                    mysql = mysql + f" foreign key"
                 mysql = mysql + f" {field_detail[0]} {field_detail[1]},"
-            mysql = 
+            for pkey in self.pkeys[table]:
+                mysql = mysql + f" primary key ({pkey}),"
+            for fkey in self.fkeys[table]:
+                mysql = mysql + f" foreign key ({fkey[0]}) references {fkey[1]},"
+            mysql = mysql[:-1] + ");"
+            print(mysql)
             with conn.cursor() as cursor:
+                #cursor.execute('use WeMeet;')
                 res = cursor.execute(mysql)
     
     def fetch_tables(self):
@@ -85,6 +89,5 @@ class Db_Initializer:
             return cursor.fetchall()
 
 if __name__ == "__main__":
-    print(
-        Db_Initializer().init_tables()
-    )
+    starter = Db_Initializer()
+    print(starter.fetch_tables())
