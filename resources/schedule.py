@@ -23,7 +23,7 @@ class Schedule():
         # Sure. Let's just commit this to GitHub and expose security vulnerabilities
         #
         conn = pymysql.connect(
-            host="localhost",
+            host="wemeet.cmp9jrts2y89.us-east-1.rds.amazonaws.com",
             port=3306,
             user="dbuser",
             password="dbuserdbuser",
