@@ -1,4 +1,5 @@
 import pymysql
+import pandas as pd
 
 class Db_Initializer:
     def __init__(self):
@@ -27,28 +28,26 @@ class Db_Initializer:
             'Group': [],
         }
 
-<<<<<<< HEAD
         self.table_creation_order = ['Group', 'User', 'Schedule']
-=======
-        self.user_input = [
+
+        self.inputs = {
+            "Group" : [
+            "1,Team1",
+            "2,Team2"
+        ],
+            "User": [
             "1,jackieryu,Jackie,Ryu,br2543@columbia.edu,1",
             "2,danielkim,Daniel,Kim,sk4539@columbia.edu,1",
             "3,harrylee,Harry,Lee,jl5271@columbia.edu,1",
             "4,jainryu,Jain,Ryu,jr3990@columbia.edu,2",
             "5,jamesjo,James,Jo,sj3014@columbia.edu,2"
-        ]
-        self.group_input = [
-            "1,Team1",
-            "2,Team2"
-        ]
-        self.schedule_input = [
-            "1,cloud_computing,1000-01-01 00:00:00,9999-12-31 23:59:59,1",
-            "2,ai,1000-01-01 00:00:00,9999-12-31 23:59:59,2",
-            "3,idk,1000-01-01 00:00:00,9999-12-31 23:59:59,3",
-            "4,busy,1000-01-01 00:00:00,9999-12-31 23:59:59,4",
-            "5,soju,1000-01-01 00:00:00,9999-12-31 23:59:59,5"
-        ]
->>>>>>> jr/starter
+        ], "Schedule" : [
+            "1,cloud_computing,1000-01-01 00:00:00,9999-12-31 23:59:59,schedule,1",
+            "2,ai,1000-01-01 00:00:00,9999-12-31 23:59:59,schedule,2",
+            "3,idk,1000-01-01 00:00:00,9999-12-31 23:59:59,schedule,3",
+            "4,busy,1000-01-01 00:00:00,9999-12-31 23:59:59,schedule,4",
+            "5,soju,1000-01-01 00:00:00,9999-12-31 23:59:59,schedule,5"
+        ]}
 
     def _get_connection(self):
         """
@@ -109,6 +108,31 @@ class Db_Initializer:
             res = cursor.execute(sql)
             return cursor.fetchall()
 
+    def insert_input(self):
+        conn = self._get_connection()
+        with conn.cursor() as cursor:
+            for table, input in self.inputs.items():
+                cursor.execute("use WeMeet;")
+                fields = [table[0] for table in self.fields[table]]
+                fields = ",".join(fields)
+                mysql = f"insert into WeMeet.{table} ({fields}) values "
+                for row in input:
+                    row = row.split(",")
+                    row = [f"'{item}'" for item in row]
+                    row = ",".join(row)
+                    mysql = mysql + "(" + row + "),"
+                mysql = mysql[:-1]
+                print(mysql)
+                cursor.execute(mysql)
+
+            return cursor.fetchall()
+
+
+
 if __name__ == "__main__":
     starter = Db_Initializer()
-    print(starter.fetch_tables())
+    starter.init_schema()
+    starter.fetch_schemas()
+    starter.init_tables()
+    starter.insert_input()
+
