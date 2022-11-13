@@ -6,11 +6,11 @@ import pymysql
 import json
 
 
-class IMDB_Artist():
+class User():
 
     def __init__(self):
-        self.db_schema = 'S22_W4111_HW2_B'
-        self.db_table = 'imdb_artists'
+        self.db_schema = 'WeMeet'
+        self.db_table = 'User'
         self.db_table_full_name = self.db_schema + "." + self.db_table
 
     def _get_connection(self):
@@ -70,8 +70,8 @@ class IMDB_Artist():
 
 if __name__ == "__main__":
 
-    artists_res = IMDB_Artist()
+    artists_res = User()
 
-    t_h = artists_res.get_resource_by_id('nm0389698')
+    t_h = artists_res.get_resource_by_id('')
     print(json.dumps(t_h, indent=2))
 

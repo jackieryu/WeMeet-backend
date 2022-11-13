@@ -2,12 +2,12 @@ import pymysql
 import json
 
 
-class Orders():
+class Group():
 
     def __init__(self):
         super().__init__()
-        self.db_schema = 'classicmodels'
-        self.db_table = 'orders'
+        self.db_schema = 'WeMeet'
+        self.db_table = 'Group'
         self.db_table_full_name = self.db_schema + "." + self.db_table
 
     def get_full_table_name(self) :
@@ -38,7 +38,7 @@ class Orders():
         :return:
         """
 
-        sql = "SELECT * FROM " + self.db_table_full_name + " WHERE orderNumber=%s"
+        sql = "SELECT * FROM " + self.db_table_full_name + " WHERE group_id=%s"
         conn = self._get_connection()
         cursor = conn.cursor()
 
@@ -200,6 +200,6 @@ class Orders():
         return cursor.rowcount
 
 if __name__ == "__main__":
-    o = Orders()
+    o = Group()
     res = o.get_resource_by_id("10101")
     print("Result = \n", json.dumps(res , indent=2, default=str))

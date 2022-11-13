@@ -2,8 +2,8 @@ from flask import Flask, Response, request
 from flask_cors import CORS
 import json
 from datetime import datetime
-from resources.imdb_artists import IMDB_Artist
-from resources.orders import Orders
+from resources.user import IMDB_Artist
+from resources.group import Orders
 
 
 import rest_utils
@@ -28,8 +28,8 @@ def health_check():
 # The method take any REST request, and produces a response indicating what
 # the parameters, headers, etc. are. This is simply for education purposes.
 #
-@app.route("/api/users/<parameter1>", methods=["GET", "POST", "PUT", "DELETE"])
-@app.route("/api/demo/", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/api/users/create_user", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/api/users/", methods=["GET", "POST", "PUT", "DELETE"])
 def demo(parameter1=None):
     """
     Returns a JSON object containing a description of the received request.
