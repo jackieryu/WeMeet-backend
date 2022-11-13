@@ -15,7 +15,6 @@ service_factory = dict()
 
 ##################################################################################################################
 
-# DFF TODO A real service would have more robust health check methods.
 # This path simply echoes to check that the app is working.
 # The path is /health and the only method is GETs
 @app.route("/health", methods=["GET"])
@@ -26,11 +25,10 @@ def health_check():
     return rsp
 
 
-# TODO Remove later. Solely for explanatory purposes.
 # The method take any REST request, and produces a response indicating what
 # the parameters, headers, etc. are. This is simply for education purposes.
 #
-@app.route("/api/demo/<parameter1>", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/api/users/<parameter1>", methods=["GET", "POST", "PUT", "DELETE"])
 @app.route("/api/demo/", methods=["GET", "POST", "PUT", "DELETE"])
 def demo(parameter1=None):
     """
